@@ -3,34 +3,38 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Figure from "./modules/Figure";
 import { degreesToRadians } from "./modules/circle";
 
+// default window sizes
 const sizes = {
   height: document.innerHeight,
   width: document.innerWidth,
 };
 
+// where the controller should go
 const input = document.querySelector("[data-input]");
 
-const scn = Utils.makeScene();
-const figure = new Figure({ scene: scn });
+const scene = Utils.makeScene();
+const figure = new Figure({
+  scene: scene,
+});
 figure.group.rotation.y = degreesToRadians(-15);
-const cmra = Utils.makePerspectiveCamera();
-cmra.position.z = 5;
+const camera = Utils.makePerspectiveCamera();
+camera.position.z = 8;
 const renderer = Utils.makeRenderer(1024, 500);
 
 const lighting = Utils.getAmbientLight(0xefefef, 1);
-const lightinglime = Utils.getAmbientLightProbe(0xefefef, 1);
-const ob = new OrbitControls(cmra, renderer.domElement);
+const lightinglime = Utils.getAmbientLightProbe(0x3cfeff, 0.2);
 
-scn.add(lighting);
-scn.add(lightinglime);
+// orbit controller to controll the scene with mouse click
+const orbitController = new OrbitControls(camera, renderer.domElement);
+
+scene.add(lighting);
+scene.add(lightinglime);
 
 figure.init();
-renderer.render(scn, cmra);
 
 function animate() {
   requestAnimationFrame(animate);
-
-  renderer.render(scn, cmra);
+  renderer.render(scene, camera);
 }
 animate();
 
@@ -40,17 +44,17 @@ window.addEventListener("resize", () => {
   sizes.height = window.innerHeight;
 
   // Update camera
-  cmra.aspect = sizes.width / sizes.height;
-  cmra.updateProjectionMatrix();
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
 
   // Update renderer
-  renderer.render(scn, cmra);
+  renderer.render(scene, camera);
 });
 
 input.addEventListener("input", (e) => {
   figure.params.angle = e.target.value;
   figure.moveArms();
-  renderer.render(scn, cmra);
+  renderer.render(scene, camera);
 });
 
 document.querySelector("#app").appendChild(renderer.domElement);

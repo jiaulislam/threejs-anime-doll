@@ -18,14 +18,14 @@ export default class Figure {
       ...params,
     };
     this.group = new Group();
-    this.head =
-      // Position according to params
-      this.group.position.x = this.params.x;
+
+    // Position according to params
+    this.group.position.x = this.params.x;
     this.group.position.y = this.params.y;
     this.group.position.z = this.params.z;
     this.group.rotation.y = this.params.ry;
     this.arms = [];
-    params.scene.add(this.group);
+    params.scene?.add(this.group);
   }
 
   createBody() {
@@ -60,7 +60,6 @@ export default class Figure {
       const arm = new Mesh(geometry, material);
 
       const m = i % 2 === 0 ? 1 : -1;
-      // arm.position.y = window.innerHeight * -0.5;
       const armGroup = new Group();
 
       armGroup.add(arm);
@@ -72,10 +71,6 @@ export default class Figure {
       armGroup.position.y = 0.6;
 
       armGroup.rotation.z = degreesToRadians(30 * m);
-
-      // const box = new BoxHelper(armGroup, 0xffff00);
-      // this.group.add(box);
-      // arm.rotation.z = degreesToRadians(30 * m);
     }
   }
 
